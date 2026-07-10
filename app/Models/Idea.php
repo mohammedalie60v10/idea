@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\IdeaStatus;
@@ -17,13 +19,13 @@ class Idea extends Model
 
     protected $casts =
         [
-            'links'=>AsArrayObject::class,
-            'status'=>IdeaStatus::class,
+            'links' => AsArrayObject::class,
+            'status' => IdeaStatus::class,
         ];
 
-    protected $attributes = [ 'status' => IdeaStatus::PENDING];
+    protected $attributes = ['status' => IdeaStatus::PENDING->value];
 
-    public function user() : BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
