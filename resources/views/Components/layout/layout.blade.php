@@ -15,7 +15,6 @@
 </main>
 
 
-
 @session('success')
 <div
     x-data="{ show: true }"
