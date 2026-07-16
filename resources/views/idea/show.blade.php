@@ -1,7 +1,7 @@
 <x-layout>
     <div class="py-8 max-w-4xl mx-auto">
         <div class="flex justify-between items-center ">
-            <a href="{{route('ideas.index' )}}" class="flex items-center gap-x-2 text-sm font-medium">
+            <a href="{{route('idea.index' )}}" class="flex items-center gap-x-2 text-sm font-medium">
                 <x-icons.arrow-back/>
                 Back to Ideas
             </a>
