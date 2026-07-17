@@ -34,6 +34,13 @@
 
                 @forelse($ideas as $idea)
                     <x-card href="{{route('idea.show', $idea)}}">
+                        @if($idea->image_path)
+                            <div class="mb-4 -mx-4 -mt-4 rounded-lg overflow-hidden">
+                                <img src="{{ asset('storage/'.$idea->image_path)}}"
+                                     alt=""
+                                     class="w-full h-48 object-cover"/>
+                            </div>
+                        @endif
                         <h3 class="text-foreground text-lg">
                             {{ $idea->title }}
                         </h3>
@@ -64,7 +71,14 @@
         <!-- /modal -->
 
         <x-modal name="create-idea" title="New Idea">
-            <form x-data="{status:'pending' ,newLink:'',links:[]}" method="POST" action="{{route('idea.store')}}">
+            <form x-data="{
+            status:'pending'
+            ,newLink:'',links:[],
+            newStep:'',
+            steps:[]}
+            " method="POST" action="{{route('idea.store')}}"
+            enctype="multipart/form-data"
+            >
                 @csrf
                 <div class="space-y-6">
                     <x-form.field
@@ -102,6 +116,58 @@
                         placeholder="Describe "
                     />
 
+                    <div class="space-y-2">
+                        <label for="image" class="label">Featured Image</label>
+                        <input type="file" name="image" accept="image/*">
+                        <x-form.error name="image"/>
+                    </div>
+                    <div>
+                        <fieldset class="space-y-3">
+                            <legend class="label">
+                                Actionable Steps
+                            </legend>
+
+
+                            <template x-for="(step , index) in steps" :key="index">
+                                <div class="flex gap-x-2 items-center">
+                                    <input class="input" name="steps[]" x-model="step" readonly>
+                                    <button type="button"
+                                            @click="links.splice(index,1)"
+                                            class="form-muted-icon"
+
+                                            aria-label="Remove link"
+                                    >
+                                        <x-icons.close />
+                                    </button>
+                                </div>
+
+                            </template>
+
+
+                            <div class="flex gap-x-2 items-center">
+                                <input
+                                    x-model="newStep"
+                                    id="new-step"
+                                    data-test="new-step"
+                                    placeholder="What needs to be done?"
+                                    class="input flex-1"
+                                    spellcheck="false"
+                                >
+                                <button type="button"
+                                        @click="steps.push(newStep.trim()); newStep = '';"
+                                        data-test="submit-new-step-button"
+                                        :disabled="newStep.trim().length === 0"
+                                        aria-label="Add a new link"
+                                        class="form-muted-icon"
+
+                                >
+                                    <x-icons.close class="rotate-45"/>
+                                </button>
+                            </div>
+
+                        </fieldset>
+                    </div>
+
                     <div>
                         <fieldset class="space-y-3">
                             <legend class="label">
@@ -125,7 +191,7 @@
                             </template>
 
 
-                            <div class="flex gap-x-2">
+                            <div class="flex gap-x-2 items-center">
                                 <input
                                     x-model="newLink"
                                     type="url"

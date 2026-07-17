@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 namespace App\Http\Controllers;
-
 use App\Http\Requests\StoreIdeaRequest;
 use App\Http\Requests\UpdateIdeaRequest;
 use App\IdeaStatus;
@@ -44,8 +43,12 @@ class IdeaController extends Controller
     {
 
 
-        Auth::user()->ideas()->create($request->validated());
-        return to_route('idea.index')->with('success','Idea created!');
+        $idea = Auth::user()->ideas()->create($request->safe()->except('steps','image'));
+        $idea->steps()->createMany(collect($request->steps)->map(fn($step) => ['description' => $step]));
+
+       $imagePath =  $request->image->store('ideas','public');
+       $idea->update(['image_path'=>$imagePath]);
+        return to_route('idea.index')->with('success', 'Idea created!');
     }
 
     /**
