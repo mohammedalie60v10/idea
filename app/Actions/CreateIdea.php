@@ -24,14 +24,13 @@ class CreateIdea
         $data = collect($attributes)->only(['title', 'description', 'status', 'links'])->toArray();
 
         if ($attributes['image'] ?? false) {
-            $data['image_path'] = $attributes['image']->store('ideas', 'public');
+            $data['image_path'] = $attributes['image']->store('idea', 'public');
         }
 
         DB::transaction(function () use ($data , $attributes)
         {
             $idea = $this->user->ideas()->create($data);
-            $steps = collect($attributes['steps'] ?? [])->map(fn ($step) => ['description' => $step]);
-            $idea->steps()->createMany($steps);
+            $idea->steps()->createMany($attributes['steps'] ?? []);
         }
 
         );

@@ -46,9 +46,9 @@
                         </h3>
 
                         <div class="mt-1">
-                            <x-ideas.status-label status="{{$idea->status}}">
+                            <x-idea.status-label status="{{$idea->status}}">
                                     {{$idea->status->label()}}
-                            </x-ideas.status-label>
+                            </x-idea.status-label>
                         </div>
 
                         <div class="mt-5 line-clamp-3">
@@ -128,7 +128,7 @@
                             </legend>
 
 
-                            <template x-for="(step , index) in steps" :key="index">
+                            <template x-for="(step , index) in steps" :key="step">
                                 <div class="flex gap-x-2 items-center">
                                     <input class="input" name="steps[]" x-model="step" readonly>
                                     <button type="button"
@@ -224,4 +224,5 @@
             </form>
         </x-modal>
     </div>
+    <x-idea.modal/>
 </x-layout>
